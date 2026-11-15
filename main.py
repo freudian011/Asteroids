@@ -17,12 +17,12 @@ from soundmanager import SoundManager
 
 def main() -> None:
 
-    pygame.init()
-    sound_manager = SoundManager()
+    pygame.init()  # Starts Pygame
+    sound_manager = SoundManager()  # Handles the game's sounds
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    clock = pygame.time.Clock()
+    clock = pygame.time.Clock()  # Keeps track of time between frames
 
     # Fonts
     font = pygame.font.Font(None, 64)
@@ -30,13 +30,13 @@ def main() -> None:
 
     # Sprite groups
     updatable: pygame.sprite.Group = pygame.sprite.Group()
-
     drawable: pygame.sprite.Group = pygame.sprite.Group()
 
     asteroids: pygame.sprite.Group = pygame.sprite.Group()
     shots: pygame.sprite.Group = pygame.sprite.Group()
 
     # Containers
+    # Automatically adds new objects to the correct sprite groups
     Asteroid.containers = (asteroids, updatable, drawable)
 
     Shot.containers = (shots, updatable, drawable)
@@ -48,33 +48,34 @@ def main() -> None:
     Player.containers = (updatable, drawable)
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_manager)
+    # Creates the player in the middle of the screen
 
     dt = 0.0
 
     # Game state
-    game_over = False
+    game_over = False  # Tracks whether the game has ended
 
     while True:
 
-        log_state()
+        log_state()  # Records the current game state
 
         # Event handling
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return
+                return  # Closes the game
 
             if event.type == pygame.KEYDOWN:
 
                 if game_over and event.key == pygame.K_ESCAPE:
                     pygame.quit()
-                    return
+                    return  # Allows the player to quit after losing
 
         # Update game objects only while playing
         if not game_over:
 
-            updatable.update(dt)
+            updatable.update(dt)  # Updates all objects that can move
 
             # Collision detection
             for asteroid in list(asteroids):
@@ -86,7 +87,7 @@ def main() -> None:
 
                     game_over = True
 
-                    break
+                    break  # Stops checking asteroids once the player is hit
 
                 # Shot collision
                 for shot in list(shots):
@@ -97,17 +98,17 @@ def main() -> None:
 
                         sound_manager.play_explosion()
 
-                        shot.kill()
+                        shot.kill()  # Removes the shot after hitting an asteroid
 
-                        asteroid.split()
+                        asteroid.split()  # Splits the asteroid into smaller ones
 
                         break
 
         # Drawing
-        screen.fill("black")
+        screen.fill("black")  # Clears the screen before drawing the next frame
 
         for obj in drawable:
-            obj.draw(screen)
+            obj.draw(screen)  # Draws every visible game object
 
         # Game Over screen
         if game_over:
@@ -140,7 +141,7 @@ def main() -> None:
                 )
             )
 
-        pygame.display.flip()
+        pygame.display.flip()  # Displays everything drawn this frame
 
         # Limit the framerate to 60 FPS
         dt = clock.tick(60) / 1000

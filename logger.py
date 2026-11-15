@@ -1,3 +1,4 @@
+#Copy and Pasted from Boot.dev from Chapter 2 Lesson 2
 import inspect
 import json
 import math

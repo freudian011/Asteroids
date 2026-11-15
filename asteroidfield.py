@@ -1,3 +1,5 @@
+# Copy and Pasted from Boot.dev from Chapter 4 Lesson 1
+
 import random
 from collections.abc import Callable
 
