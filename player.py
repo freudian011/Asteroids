@@ -12,10 +12,11 @@ from shot import Shot
 
 
 class Player(CircleShape):
-    def __init__(self, x: float, y: float) -> None:
+    def __init__(self, x: float, y: float, sound_manager) -> None:
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0.0
         self.shoot_timer = 0.0
+        self.sound_manager = sound_manager
 
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
@@ -46,10 +47,13 @@ class Player(CircleShape):
     def shoot(self) -> None:
         if self.shoot_timer > 0:
             return
+
         self.shoot_timer = PLAYER_SHOOT_COOLDOWN_SECONDS
+
         shot = Shot(self.position.x, self.position.y)
         shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
 
+        self.sound_manager.play_shoot()
     def rotate(self, dt: float) -> None:
         self.rotation += PLAYER_TURN_SPEED * dt
 

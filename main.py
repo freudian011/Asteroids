@@ -12,10 +12,13 @@ from player import Player
 
 from shot import Shot
 
+from soundmanager import SoundManager
+
 
 def main() -> None:
 
     pygame.init()
+    sound_manager = SoundManager()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -44,7 +47,7 @@ def main() -> None:
 
     Player.containers = (updatable, drawable)
 
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_manager)
 
     dt = 0.0
 
@@ -91,6 +94,8 @@ def main() -> None:
                     if asteroid.collides_with(shot):
 
                         log_event("asteroid_shot")
+
+                        sound_manager.play_explosion()
 
                         shot.kill()
 
