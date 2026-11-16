@@ -129,7 +129,7 @@ Asteroids/
 ├── logger.py         # Event and game-state logging
 ├── soundmanager.py   # Handles the game's sound effects
 │
-├── tests/            # Automated pytest test files
+├── tests/            # Pytest test files
 │   ├── test_player.py
 │   ├── test_asteroid.py
 │   ├── test_asteroidfield.py
@@ -137,6 +137,14 @@ Asteroids/
 │   └── test_shot.py
 │
 ├── sounds/           # Sound effect files
+    ├── explosion.wav
+    └── shoot.wav
+├── assets/           # Background Music files
+    └── background_music.ogg
+├── screenshots/      # Screenshots of the gameplay
+    ├── gameplay.png
+    ├── gameover.png
+    └── pausescreen.png
 ├── pyproject.toml    # Project configuration and dependencies
 ├── uv.lock           # Locked dependency versions
 └── README.md         # Project documentation
@@ -148,7 +156,7 @@ Asteroids/
 ### Gameplay
 Shows the player controlling the spaceship, shooting asteroids and earning points.
 
-![Gameplay](screenshots/game_play.png)
+![Gameplay](screenshots/gameplay.png)
 
 ### Pause Screen
 Shows the game paused during gameplay.
