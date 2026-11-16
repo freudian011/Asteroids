@@ -18,8 +18,8 @@ from soundmanager import SoundManager
 # Draws the player's remaining lives as small spaceships
 def draw_lives(screen: pygame.Surface, lives: int) -> None:
     for i in range(lives):
-        x = 35 + i * 40  # Moves each spaceship further to the right
-        y = 65  # Keeps the spaceships at the same height
+        x = 35 + i * 40
+        y = 65
 
         # Sets the direction and size of the spaceship
         forward = pygame.Vector2(0, -1)
@@ -36,13 +36,13 @@ def draw_lives(screen: pygame.Surface, lives: int) -> None:
 
 def main() -> None:
 
-    pygame.init()  # Starts Pygame
-    sound_manager = SoundManager()  # Loads and handles the game's sounds
+    pygame.init()
+    sound_manager = SoundManager()
 
     # Creates the game window
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    clock = pygame.time.Clock()  # Keeps track of time between frames
+    clock = pygame.time.Clock()
 
     # Sets up the fonts used in the game
     font = pygame.font.Font(None, 64)
@@ -72,41 +72,78 @@ def main() -> None:
     # Creates the player in the middle of the screen
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_manager)
 
-    dt = 0.0  # Stores the time between each frame
+    dt = 0.0
 
     # Keeps track of the current game state
-    game_over = False  # Tracks whether the game has ended
-    score = 0  # Keeps track of the player's score
-    lives = 3  # Starts the player with three lives
-    player_invulnerable_timer = 0.0  # Controls how long the player is protected after being hit
+    game_over = False
+    paused = False
+    score = 0
+    lives = 3
+    player_invulnerable_timer = 0.0
 
     # Main game loop
     while True:
 
-        log_state()  # Records the current game state
+        log_state()
 
         # Checks for events like closing the window or pressing a key
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return  # Closes the game
+                return
 
             if event.type == pygame.KEYDOWN:
+
+                # Pauses or resumes the game
+                if not game_over and event.key == pygame.K_p:
+                    paused = not paused
+
+                # Restarts the game after game over
+                if game_over and event.key == pygame.K_r:
+
+                    # Removes all existing asteroids and shots
+                    for asteroid in list(asteroids):
+                        asteroid.kill()
+
+                    for shot in list(shots):
+                        shot.kill()
+
+                    # Resets the player's position and movement
+                    player.position = pygame.Vector2(
+                        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
+                    )
+                    player.velocity = pygame.Vector2(0, 0)
+                    player.rotation = 0.0
+                    player.shoot_timer = 0.0
+
+                    # Resets the asteroid spawning timer
+                    asteroid_field.spawn_timer = 0.0
+
+                    # Resets the game statistics
+                    score = 0
+                    lives = 3
+                    player_invulnerable_timer = 0.0
+
+                    # Restarts the game
+                    game_over = False
+                    paused = False
 
                 # Lets the player quit after the game ends
                 if game_over and event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     return
 
-        # Only updates the game while the player is still alive
-        if not game_over:
+        # Only updates the game while it is not paused or over
+        if not game_over and not paused:
 
             # Updates the position of all moving objects
             updatable.update(dt)
 
             # Counts down the player's protection time
-            player_invulnerable_timer = max(0, player_invulnerable_timer - dt)
+            player_invulnerable_timer = max(
+                0, player_invulnerable_timer - dt
+            )
 
             # Checks for collisions between asteroids, the player and bullets
             for asteroid in list(asteroids):
@@ -114,16 +151,18 @@ def main() -> None:
                 # Checks if an asteroid hits the player
                 if player_invulnerable_timer <= 0 and asteroid.collides_with(player):
 
-                    log_event("player_hit")  # Records that the player was hit
+                    log_event("player_hit")
 
-                    lives -= 1  # Removes one life
+                    lives -= 1
 
                     if lives <= 0:
-                        game_over = True  # Ends the game when no lives are left
+                        game_over = True
 
                     else:
                         # Moves the player back to the middle of the screen
-                        player.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+                        player.position = pygame.Vector2(
+                            SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
+                        )
 
                         # Stops the player from continuing to move
                         player.velocity = pygame.Vector2(0, 0)
@@ -131,30 +170,30 @@ def main() -> None:
                     # Gives the player 1.5 seconds of protection
                     player_invulnerable_timer = 1.5
 
-                    break  # Stops checking collisions after the player is hit
+                    break
 
                 # Checks if a bullet hits an asteroid
                 for shot in list(shots):
 
                     if asteroid.collides_with(shot):
 
-                        log_event("asteroid_shot")  # Records that an asteroid was shot
+                        log_event("asteroid_shot")
 
                         # Gives points depending on the size of the asteroid
                         if asteroid.radius <= ASTEROID_MIN_RADIUS:
-                            score += 100  # Small asteroid
+                            score += 100
                         elif asteroid.radius <= ASTEROID_MIN_RADIUS * 2:
-                            score += 50  # Medium asteroid
+                            score += 50
                         else:
-                            score += 20  # Large asteroid
+                            score += 20
 
-                        shot.kill()  # Removes the bullet after it hits
+                        shot.kill()
 
-                        sound_manager.play_explosion()  # Plays the explosion sound
+                        sound_manager.play_explosion()
 
-                        asteroid.split()  # Breaks the asteroid into smaller pieces
+                        asteroid.split()
 
-                        break  # Stops checking bullets for this asteroid
+                        break
 
         # Clears the screen before drawing the next frame
         screen.fill("black")
@@ -176,12 +215,39 @@ def main() -> None:
             # Makes the player flash when it is protected after being hit
             if obj == player and player_invulnerable_timer > 0:
 
-                # Only draw the player during certain frames, giving it a flashing effect to show that the player is protected
                 if int(player_invulnerable_timer * 10) % 2 == 0:
                     obj.draw(screen)
 
             else:
                 obj.draw(screen)
+
+        # Displays the pause screen
+        if paused:
+
+            paused_text = font.render("PAUSED", True, "white")
+            resume_text = small_font.render(
+                "Press P to resume", True, "white"
+            )
+
+            screen.blit(
+                paused_text,
+                paused_text.get_rect(
+                    center=(
+                        SCREEN_WIDTH / 2,
+                        SCREEN_HEIGHT / 2 - 30
+                    )
+                )
+            )
+
+            screen.blit(
+                resume_text,
+                resume_text.get_rect(
+                    center=(
+                        SCREEN_WIDTH / 2,
+                        SCREEN_HEIGHT / 2 + 30
+                    )
+                )
+            )
 
         # Displays the game-over screen when the player runs out of lives
         if game_over:
@@ -191,7 +257,7 @@ def main() -> None:
             )
 
             restart_text = small_font.render(
-                "Press ESC to quit", True, "white"
+                "R to restart | ESC to quit", True, "white"
             )
 
             # Places the game-over message in the middle of the screen

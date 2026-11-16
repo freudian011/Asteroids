@@ -17,6 +17,8 @@ The aim of the game is to survive for as long as possible by flying around space
 - Player flashes when temporarily invulnerable after being hit.
 - Score system that gives different points depending on asteroid size.
 - Sound effects for shooting and destroying asteroids.
+- Pause and resume functionality.
+- Restart functionality after game over.
 - Frame-rate-independent movement using delta time (`dt`).
 - Object-oriented programming using classes and inheritance.
 - Event and game-state logging.
@@ -30,6 +32,9 @@ The aim of the game is to survive for as long as possible by flying around space
 | `A` | Rotate left |
 | `D` | Rotate right |
 | `SPACE` | Shoot |
+| `P` | Pause / resume the game |
+| `R` | Restart after game over |
+| `ESC` | Quit after game over |
 
 ## Scoring System
 
@@ -45,6 +50,7 @@ You earn points by destroying asteroids. Smaller asteroids are worth more points
 
 - Python 3.13 or higher
 - Pygame 2.6.1
+- pytest 9.2.0 (for running tests)
 
 ## Installation
 
@@ -62,14 +68,16 @@ cd Asteroids
 
 **3. Install the dependencies**
 
-```bash
-pip install pygame==2.6.1
-```
-
-Alternatively, if you have [uv](https://docs.astral.sh/uv/) installed:
+If you are using `uv`:
 
 ```bash
 uv sync
+```
+
+Alternatively, install the dependencies manually:
+
+```bash
+pip install pygame==2.6.1 pytest
 ```
 
 ## Running the Game
@@ -86,6 +94,26 @@ If you are using `uv`, run:
 uv run main.py
 ```
 
+## Running Tests
+
+The project uses **pytest** to test individual game components and check that important functionality works correctly.
+
+Run all tests using:
+
+```bash
+uv run pytest -v
+```
+
+The project contains 20 automated tests covering components such as:
+
+- Player movement, rotation and shooting.
+- Asteroid movement and splitting.
+- Circle collision detection.
+- Projectile movement.
+- Asteroid spawning and timing.
+
+**Final testing result:** 20 out of 20 tests passed successfully.
+
 ## Project Structure
 
 ```text
@@ -101,6 +129,13 @@ Asteroids/
 ├── logger.py         # Event and game-state logging
 ├── soundmanager.py   # Handles the game's sound effects
 │
+├── tests/            # Automated pytest test files
+│   ├── test_player.py
+│   ├── test_asteroid.py
+│   ├── test_asteroidfield.py
+│   ├── test_circleshape.py
+│   └── test_shot.py
+│
 ├── sounds/           # Sound effect files
 ├── pyproject.toml    # Project configuration and dependencies
 ├── uv.lock           # Locked dependency versions
@@ -111,7 +146,8 @@ Asteroids/
 
 - [Python](https://www.python.org/)
 - [Pygame](https://www.pygame.org/)
+- [pytest](https://docs.pytest.org/)
 
 ## Author
 
-Developed by [freudian011](https://github.com/freudian011) as part of my Year 9 Computing Studies project.
+Developed by [freudian011](https://github.com/freudian011) as part of my Year 9 Boot.dev Computing Studies project.
