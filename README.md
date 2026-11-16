@@ -137,14 +137,14 @@ Asteroids/
 │   └── test_shot.py
 │
 ├── sounds/           # Sound effect files
-    ├── explosion.wav
-    └── shoot.wav
+│   ├── explosion.wav
+│   └── shoot.wav
 ├── assets/           # Background Music files
-    └── background_music.ogg
+│   └── background_music.ogg
 ├── screenshots/      # Screenshots of the gameplay
-    ├── gameplay.png
-    ├── gameover.png
-    └── pausescreen.png
+│   ├── gameplay.png
+│   ├── gameover.png
+│   └── pausescreen.png
 ├── pyproject.toml    # Project configuration and dependencies
 ├── uv.lock           # Locked dependency versions
 └── README.md         # Project documentation
