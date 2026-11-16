@@ -41,6 +41,11 @@ def main() -> None:
     pygame.init()
     sound_manager = SoundManager()
 
+    # Loads and starts the background music
+    pygame.mixer.music.load("assets/background_music.ogg")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(-1)
+
     # Creates the game window
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -99,9 +104,14 @@ def main() -> None:
 
             if event.type == pygame.KEYDOWN:
 
-                # Pauses or resumes the game
+                # Pauses or resumes the game and background music
                 if not game_over and event.key == pygame.K_p:
                     paused = not paused
+
+                    if paused:
+                        pygame.mixer.music.pause()
+                    else:
+                        pygame.mixer.music.unpause()
 
                 # Restarts the game after game over
                 if game_over and event.key == pygame.K_r:
@@ -132,6 +142,9 @@ def main() -> None:
                     lives = 3
                     player_invulnerable_timer = 0.0
 
+                    # Restarts the background music
+                    pygame.mixer.music.play(-1)
+
                     # Restarts the game
                     game_over = False
                     paused = False
@@ -146,11 +159,6 @@ def main() -> None:
 
             # Updates the position of all moving objects
             updatable.update(dt)
-
-            explosions = [
-                explosion for explosion in explosions
-                if not explosion.is_finished()
-            ]
 
             # Counts down the player's protection time
             player_invulnerable_timer = max(
@@ -172,9 +180,12 @@ def main() -> None:
                         explosions.append(Explosion(player.position, 40))
                         game_over = True
 
+                        # Stops the background music when the player dies
+                        pygame.mixer.music.stop()
+
                     else:
                         # Creates an explosion before the player respawns
-                        explosions.append(Explosion(player.position, 20))    
+                        explosions.append(Explosion(player.position, 20))
 
                         # Moves the player back to the middle of the screen
                         player.position = pygame.Vector2(
@@ -195,7 +206,7 @@ def main() -> None:
                     if asteroid.collides_with(shot):
 
                         log_event("asteroid_shot")
-                        
+
                         explosions.append(Explosion(asteroid.position))
 
                         # Gives points depending on the size of the asteroid
@@ -252,9 +263,10 @@ def main() -> None:
             else:
                 obj.draw(screen)
 
+        # Draws all active explosions
         for explosion in explosions:
             explosion.draw(screen)
-        
+
         # Displays the controls at the bottom of the screen
         if not game_over and not paused:
 
@@ -331,7 +343,6 @@ def main() -> None:
                 "Press ESC to quit", True, "white"
             )
 
-            # Places the game-over message in the middle of the screen
             screen.blit(
                 game_over_text,
                 game_over_text.get_rect(
@@ -342,7 +353,6 @@ def main() -> None:
                 )
             )
 
-            # Displays the restart instruction
             screen.blit(
                 restart_text,
                 restart_text.get_rect(
@@ -353,7 +363,6 @@ def main() -> None:
                 )
             )
 
-            # Displays the quit instruction
             screen.blit(
                 quit_text,
                 quit_text.get_rect(
