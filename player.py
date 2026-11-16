@@ -8,6 +8,8 @@ from constants import (
     PLAYER_SHOOT_SPEED,
     PLAYER_SPEED,
     PLAYER_TURN_SPEED,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
 )
 from shot import Shot
 
@@ -16,7 +18,7 @@ class Player(CircleShape):
     def __init__(self, x: float, y: float, sound_manager) -> None:
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0.0  # Keeps track of which way the ship is facing
-        self.shoot_timer = 0.0  # Keeps track of when the player can shoot again
+        self.shoot_timer = 0.0  # Controls how often the player can shoot
         self.sound_manager = sound_manager
 
     def draw(self, screen: pygame.Surface) -> None:
@@ -28,7 +30,7 @@ class Player(CircleShape):
         # Works out which way the ship is pointing
 
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        # Works out the size and direction of the ship's sides
+        # Works out the direction and size of the ship's sides
 
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius - right
@@ -51,6 +53,8 @@ class Player(CircleShape):
             self.rotate(dt)  # Turns right
         if keys[pygame.K_SPACE]:
             self.shoot()  # Shoots a bullet
+
+        self.wrap_position()  # Keeps the player on the screen by moving it to the opposite side
 
     def shoot(self) -> None:
         if self.shoot_timer > 0:
@@ -80,3 +84,18 @@ class Player(CircleShape):
 
         self.position += rotated_with_speed_vector
         # Moves the ship
+
+    def wrap_position(self) -> None:
+        # Moves the player to the opposite side when it leaves the screen
+
+        if self.position.x < -self.radius:
+            self.position.x = SCREEN_WIDTH + self.radius
+
+        elif self.position.x > SCREEN_WIDTH + self.radius:
+            self.position.x = -self.radius
+
+        if self.position.y < -self.radius:
+            self.position.y = SCREEN_HEIGHT + self.radius
+
+        elif self.position.y > SCREEN_HEIGHT + self.radius:
+            self.position.y = -self.radius

@@ -107,6 +107,8 @@ def main() -> None:
 
                         shot.kill()
 
+                        sound_manager.play_explosion() # Plays the explosion sound
+
                         asteroid.split()
 
                         break
