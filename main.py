@@ -4,7 +4,7 @@ import pygame
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import ASTEROID_MIN_RADIUS, SCREEN_HEIGHT, SCREEN_WIDTH
 
 from logger import log_event, log_state
 
@@ -54,7 +54,8 @@ def main() -> None:
 
     # Game state
     game_over = False  # Tracks whether the game has ended
-
+    score = 0  # Keeps track of the player's score
+   
     while True:
 
         log_state()  # Records the current game state
@@ -96,16 +97,29 @@ def main() -> None:
 
                         log_event("asteroid_shot")
 
-                        sound_manager.play_explosion()
+                        # Award points based on asteroid size
+                        if asteroid.radius <= ASTEROID_MIN_RADIUS:
+                            score += 100
+                        elif asteroid.radius <= ASTEROID_MIN_RADIUS * 2:
+                            score += 50
+                        else:
+                            score += 20
 
-                        shot.kill()  # Removes the shot after hitting an asteroid
+                        shot.kill()
 
-                        asteroid.split()  # Splits the asteroid into smaller ones
+                        asteroid.split()
 
                         break
 
         # Drawing
         screen.fill("black")  # Clears the screen before drawing the next frame
+
+        # Score display
+        score_text = small_font.render(
+            f"{score:08d}", True, "white"
+        )
+
+        screen.blit(score_text, (20, 20))
 
         for obj in drawable:
             obj.draw(screen)  # Draws every visible game object
