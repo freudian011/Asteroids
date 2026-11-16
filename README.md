@@ -2,19 +2,23 @@
 
 My Year 9 Computing Studies Project: Asteroids
 
-A classic Asteroids arcade game built with **Python** and **Pygame**.
+A classic Asteroids arcade game made using **Python** and **Pygame**.
 
-The objective is to survive by navigating through space, avoiding asteroids and destroying them using projectiles. Larger asteroids split into smaller ones when hit, creating an increasingly challenging environment.
+The aim of the game is to survive for as long as possible by flying around space, avoiding asteroids and shooting them with projectiles. When an asteroid is hit, it splits into smaller asteroids, making the game more challenging as you play.
 
 ## Features
 
 - Player movement and rotation.
-- Projectile shooting with a firing cooldown.
+- Shooting projectiles with a firing cooldown.
 - Random asteroid spawning from the edges of the screen.
-- Asteroid splitting when hit.
-- Circle-based collision detection.
+- Asteroids split into smaller pieces when hit.
+- Collision detection between the player, asteroids and projectiles.
+- Three lives, shown as small spaceship icons in the top-left corner.
+- Player flashes when temporarily invulnerable after being hit.
+- Score system that gives different points depending on asteroid size.
+- Sound effects for shooting and destroying asteroids.
 - Frame-rate-independent movement using delta time (`dt`).
-- Object-oriented design using classes and inheritance.
+- Object-oriented programming using classes and inheritance.
 - Event and game-state logging.
 
 ## Controls
@@ -26,6 +30,16 @@ The objective is to survive by navigating through space, avoiding asteroids and 
 | `A` | Rotate left |
 | `D` | Rotate right |
 | `SPACE` | Shoot |
+
+## Scoring System
+
+You earn points by destroying asteroids. Smaller asteroids are worth more points because they can be harder to hit.
+
+| Asteroid Size | Points |
+|---|---:|
+| Large | 20 |
+| Medium | 50 |
+| Small | 100 |
 
 ## Requirements
 
@@ -40,7 +54,7 @@ The objective is to survive by navigating through space, avoiding asteroids and 
 git clone https://github.com/freudian011/Asteroids.git
 ```
 
-**2. Navigate into the project directory**
+**2. Navigate into the project folder**
 
 ```bash
 cd Asteroids
@@ -60,7 +74,7 @@ uv sync
 
 ## Running the Game
 
-Run the following command from the project directory:
+Run the following command from the project folder:
 
 ```bash
 python main.py
@@ -77,30 +91,21 @@ uv run main.py
 ```text
 Asteroids/
 │
-├── main.py           # Main game loop and initialisation
+├── main.py           # Main game loop and setup
 ├── player.py         # Player movement, rotation and shooting
 ├── asteroid.py       # Asteroid behaviour and splitting
-├── asteroidfield.py  # Asteroid spawning and positioning
+├── asteroidfield.py  # Spawning asteroids
 ├── circleshape.py    # Base class and collision detection
 ├── shot.py           # Projectile behaviour
-├── constants.py      # Game configuration and constants
+├── constants.py      # Game settings and values
 ├── logger.py         # Event and game-state logging
+├── soundmanager.py   # Handles the game's sound effects
 │
+├── sounds/           # Sound effect files
 ├── pyproject.toml    # Project configuration and dependencies
 ├── uv.lock           # Locked dependency versions
 └── README.md         # Project documentation
 ```
-
-## Technical Concepts
-
-This project uses several Python programming concepts:
-
-- **Object-Oriented Programming (OOP):** Game entities are represented using individual classes.
-- **Inheritance:** The `Player`, `Asteroid` and `Shot` classes inherit shared functionality from `CircleShape`.
-- **Polymorphism:** Different game objects implement their own drawing and updating behaviour.
-- **Pygame Sprite Groups:** Objects are organised into groups for updating, drawing and collision management.
-- **Delta Time:** Movement is calculated using elapsed time to maintain consistent behaviour across different frame rates.
-- **Type Annotations:** Function parameters, return values and variables use Python type hints.
 
 ## Technologies Used
 
@@ -109,4 +114,4 @@ This project uses several Python programming concepts:
 
 ## Author
 
-Developed by [freudian011](https://github.com/freudian011).
+Developed by [freudian011](https://github.com/freudian011) as part of my Year 9 Computing Studies project.
