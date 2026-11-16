@@ -166,6 +166,10 @@ Shows the game-over screen after the player loses all lives.
 - [Pygame](https://www.pygame.org/)
 - [pytest](https://docs.pytest.org/)
 
+## Credits
+
+I made this as part of my Year 9 Computing Technology Task 4 assignment, using the concepts and techniques through the Boot.dev *"Learn Object Oriented Programming"* and *"Build Asteroids"* courses.
+
 ## Author
 
 Developed by [freudian011](https://github.com/freudian011) as part of my Year 9 Boot.dev Computing Studies project.
