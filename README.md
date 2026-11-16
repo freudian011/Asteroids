@@ -145,6 +145,8 @@ Asteroids/
 │   ├── gameplay.png
 │   ├── gameover.png
 │   └── pausescreen.png
+├── .gitignore        # Tells Git which files not to track
+├── .python-version   # Specifies which Python version the project uses
 ├── pyproject.toml    # Project configuration and dependencies
 ├── uv.lock           # Locked dependency versions
 └── README.md         # Project documentation
