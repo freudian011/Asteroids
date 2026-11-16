@@ -14,6 +14,8 @@ from shot import Shot
 
 from soundmanager import SoundManager
 
+from explosion import Explosion
+
 
 # Draws the player's remaining lives as small spaceships
 def draw_lives(screen: pygame.Surface, lives: int) -> None:
@@ -55,6 +57,8 @@ def main() -> None:
     # Creates separate groups for asteroids and bullets
     asteroids: pygame.sprite.Group = pygame.sprite.Group()
     shots: pygame.sprite.Group = pygame.sprite.Group()
+
+    explosions = []
 
     # Sets up the groups that new objects will automatically join
     Asteroid.containers = (asteroids, updatable, drawable)
@@ -109,6 +113,9 @@ def main() -> None:
                     for shot in list(shots):
                         shot.kill()
 
+                    # Removes all existing explosions
+                    explosions.clear()
+
                     # Resets the player's position and movement
                     player.position = pygame.Vector2(
                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
@@ -140,6 +147,11 @@ def main() -> None:
             # Updates the position of all moving objects
             updatable.update(dt)
 
+            explosions = [
+                explosion for explosion in explosions
+                if not explosion.is_finished()
+            ]
+
             # Counts down the player's protection time
             player_invulnerable_timer = max(
                 0, player_invulnerable_timer - dt
@@ -155,10 +167,15 @@ def main() -> None:
 
                     lives -= 1
 
+                    # Creates an explosion where the player was hit
                     if lives <= 0:
+                        explosions.append(Explosion(player.position, 40))
                         game_over = True
 
                     else:
+                        # Creates an explosion before the player respawns
+                        explosions.append(Explosion(player.position, 20))    
+
                         # Moves the player back to the middle of the screen
                         player.position = pygame.Vector2(
                             SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
@@ -178,6 +195,8 @@ def main() -> None:
                     if asteroid.collides_with(shot):
 
                         log_event("asteroid_shot")
+                        
+                        explosions.append(Explosion(asteroid.position))
 
                         # Gives points depending on the size of the asteroid
                         if asteroid.radius <= ASTEROID_MIN_RADIUS:
@@ -194,6 +213,18 @@ def main() -> None:
                         asteroid.split()
 
                         break
+
+        # Updates explosions while the game is running or over
+        if not paused:
+
+            for explosion in list(explosions):
+                explosion.update(dt)
+
+            # Removes explosions that have finished
+            explosions = [
+                explosion for explosion in explosions
+                if not explosion.is_finished()
+            ]
 
         # Clears the screen before drawing the next frame
         screen.fill("black")
@@ -221,6 +252,9 @@ def main() -> None:
             else:
                 obj.draw(screen)
 
+        for explosion in explosions:
+            explosion.draw(screen)
+        
         # Displays the controls at the bottom of the screen
         if not game_over and not paused:
 
