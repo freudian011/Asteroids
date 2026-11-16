@@ -148,7 +148,7 @@ Asteroids/
 ### Gameplay
 Shows the player controlling the spaceship, shooting asteroids and earning points.
 
-![Gameplay](screenshots/gameplay.png)
+![Gameplay](screenshots/game_play.png)
 
 ### Pause Screen
 Shows the game paused during gameplay.
