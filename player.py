@@ -26,12 +26,16 @@ class Player(CircleShape):
         # Draws the player's spaceship
 
     def triangle(self) -> list[pygame.Vector2]:
+        # Creates a forward-facing vector and rotates it according to the player's rotation.
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         # Works out which way the ship is pointing
 
+        # Creates a perpendicular vector to calculate the width of the spaceship.
+        # Scaling it by the radius controls how wide the ship's back corners are.
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
         # Works out the direction and size of the ship's sides
 
+        # Calculates the three vertices of the triangular spaceship using its position and direction.
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
@@ -66,7 +70,7 @@ class Player(CircleShape):
         # Creates a bullet where the player is
 
         shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
-        # Makes the bullet travel in the direction the ship is facing
+        # Calculates the bullet's velocity using the player's rotation and shooting speed.
 
         self.sound_manager.play_shoot()  # Plays the shooting sound
 
