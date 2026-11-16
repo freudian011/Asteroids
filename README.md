@@ -142,6 +142,24 @@ Asteroids/
 └── README.md         # Project documentation
 ```
 
+
+## Screenshots
+
+### Gameplay
+Shows the player controlling the spaceship, shooting asteroids and earning points.
+
+![Gameplay](screenshots/gameplay.png)
+
+### Pause Screen
+Shows the game paused during gameplay.
+
+![Pause Screen](screenshots/pausescreen.png)
+
+### Game Over
+Shows the game-over screen after the player loses all lives.
+
+![Game Over](screenshots/gameover.png)
+
 ## Technologies Used
 
 - [Python](https://www.python.org/)
