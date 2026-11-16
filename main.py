@@ -212,7 +212,7 @@ def main() -> None:
         # Draws every object in the drawable group
         for obj in drawable:
 
-            # Makes the player flash when it is protected after being hit
+            # Makes the player flash when protected after being hit
             if obj == player and player_invulnerable_timer > 0:
 
                 if int(player_invulnerable_timer * 10) % 2 == 0:
@@ -221,12 +221,35 @@ def main() -> None:
             else:
                 obj.draw(screen)
 
+        # Displays the controls at the bottom of the screen
+        if not game_over and not paused:
+
+            controls_text = small_font.render(
+                "W/S: MOVE   A/D: ROTATE   SPACE: SHOOT   P: PAUSE",
+                True,
+                "white"
+            )
+
+            screen.blit(
+                controls_text,
+                controls_text.get_rect(
+                    center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 25)
+                )
+            )
+
         # Displays the pause screen
         if paused:
 
             paused_text = font.render("PAUSED", True, "white")
+
             resume_text = small_font.render(
                 "Press P to resume", True, "white"
+            )
+
+            controls_text = small_font.render(
+                "W/S: MOVE   A/D: ROTATE   SPACE: SHOOT",
+                True,
+                "white"
             )
 
             screen.blit(
@@ -234,7 +257,7 @@ def main() -> None:
                 paused_text.get_rect(
                     center=(
                         SCREEN_WIDTH / 2,
-                        SCREEN_HEIGHT / 2 - 30
+                        SCREEN_HEIGHT / 2 - 65
                     )
                 )
             )
@@ -244,7 +267,17 @@ def main() -> None:
                 resume_text.get_rect(
                     center=(
                         SCREEN_WIDTH / 2,
-                        SCREEN_HEIGHT / 2 + 30
+                        SCREEN_HEIGHT / 2
+                    )
+                )
+            )
+
+            screen.blit(
+                controls_text,
+                controls_text.get_rect(
+                    center=(
+                        SCREEN_WIDTH / 2,
+                        SCREEN_HEIGHT / 2 + 55
                     )
                 )
             )
@@ -257,7 +290,11 @@ def main() -> None:
             )
 
             restart_text = small_font.render(
-                "R to restart | ESC to quit", True, "white"
+                "Press R to restart", True, "white"
+            )
+
+            quit_text = small_font.render(
+                "Press ESC to quit", True, "white"
             )
 
             # Places the game-over message in the middle of the screen
@@ -266,18 +303,29 @@ def main() -> None:
                 game_over_text.get_rect(
                     center=(
                         SCREEN_WIDTH / 2,
-                        SCREEN_HEIGHT / 2 - 30
+                        SCREEN_HEIGHT / 2 - 65
                     )
                 )
             )
 
-            # Displays the instructions underneath the game-over message
+            # Displays the restart instruction
             screen.blit(
                 restart_text,
                 restart_text.get_rect(
                     center=(
                         SCREEN_WIDTH / 2,
-                        SCREEN_HEIGHT / 2 + 30
+                        SCREEN_HEIGHT / 2
+                    )
+                )
+            )
+
+            # Displays the quit instruction
+            screen.blit(
+                quit_text,
+                quit_text.get_rect(
+                    center=(
+                        SCREEN_WIDTH / 2,
+                        SCREEN_HEIGHT / 2 + 45
                     )
                 )
             )
